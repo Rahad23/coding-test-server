@@ -2,7 +2,7 @@ const express = require ('express');
 const app =express();
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const { query } = require('express');
 const port = process.env.PORT || 5000;
 require('dotenv').config();
@@ -39,7 +39,14 @@ app.post('/userSetData', async(req, res)=>{
 app.get('/userData', async(req, res)=>{
     const query = {};
     const result = await Usercollection.find(query).toArray();
-    res.send(result);
+    res.send(result); 
+})
+
+app.delete('/userData/:id', async(req, res)=>{
+    const id = req.params.id;
+    const query = {_id: ObjectId(id)};
+    const result= await Usercollection.deleteOne(query);
+    res.send({acknowledged: true});
 })
 
 app.get('/', (req, res)=>{
